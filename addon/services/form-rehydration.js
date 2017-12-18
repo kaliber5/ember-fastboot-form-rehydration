@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import { assign } from '@ember/polyfills';
 import { assert } from '@ember/debug';
+import { getOwner } from '@ember/application';
 
 function triggerBasicEvent(el, type) {
   let event = document.createEvent('Event');
@@ -13,7 +14,8 @@ export default Service.extend({
   selectors: ['input', 'textarea'],
 
   inspect() {
-    let elements = document.querySelectorAll(this.get('selectors').join(','));
+    let rootElement = getOwner(this).rootElement || '';
+    let elements = document.querySelectorAll(this.get('selectors').map((sel) => `${rootElement} ${sel}`).join(','));
     let props = Array.from(elements)
       .filter((el) => !!el.name)
       .map((el) => ({
@@ -27,8 +29,9 @@ export default Service.extend({
 
   rehydrate() {
     assert('No values available. You must run `inspect` before `rehydrate`!', this.values);
+    let rootElement = getOwner(this).rootElement || '';
     for (let name in this.values) {
-      let el = document.querySelector(`[name="${name}"]`);
+      let el = document.querySelector(`${rootElement} [name="${name}"]`);
       if (el) {
         el.value = this.values[name];
         triggerBasicEvent(el, 'input');
