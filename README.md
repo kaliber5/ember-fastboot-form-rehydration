@@ -1,5 +1,7 @@
 # ember-fastboot-form-rehydration
 
+[![Build Status](https://travis-ci.org/kaliber5/ember-fastboot-form-rehydration.svg?branch=master)](https://travis-ci.org/kaliber5/ember-fastboot-form-rehydration)
+
 This addon tries to mitigate a common problem of FastBoot rendered Ember apps
 containing form controls.
 
