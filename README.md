@@ -8,7 +8,34 @@ containing form controls.
 
 ## Installation
 
-`ember install ember-fastboot-form-rehydration`
+```bash
+ember install ember-fastboot-form-rehydration
+```
+
+## Usage
+
+#### Import ember-fastboot-form-rehydration
+
+In your `app/router.js` file, import the mixin:
+
+```js
+import FormRehydration from 'ember-fastboot-form-rehydration';
+```
+
+And add `FormRehydration` as an extension to your Router object:
+
+```javascript
+const Router = Ember.Router.extend(FormRehydration, {});
+```
+
+#### Tests
+
+In your route and controller tests, add `'service:form-rehydration'` and `'service:form-rehydration'` as dependencies in the `needs: []` block:
+
+```js
+//{your-app}}/tests/unit/routes/{{your-route}}.js
+needs:['service:form-rehydration'],
+```
 
 ## The Problem
 
