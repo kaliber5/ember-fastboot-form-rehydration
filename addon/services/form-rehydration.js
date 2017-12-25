@@ -13,6 +13,8 @@ export default Service.extend({
 
   selectors: ['input', 'textarea'],
 
+  didRehydrate: false,
+
   inspect() {
     let rootElement = getOwner(this).rootElement || '';
     let elements = document.querySelectorAll(this.get('selectors').map((sel) => `${rootElement} ${sel}`).join(','));
