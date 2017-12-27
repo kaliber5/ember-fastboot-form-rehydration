@@ -6,7 +6,7 @@ export default Route.extend({
     return new RSVP.Promise((resolve)=> {
       setTimeout(()=> {
         resolve();
-      }, 50);
+      }, typeof FastBoot === 'undefined' ? 50 : 0);
     });
   }
 });
