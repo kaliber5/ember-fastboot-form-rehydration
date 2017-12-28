@@ -6,15 +6,22 @@ export function initialize(appInstance) {
   }
 
   let service = appInstance.lookup('service:form-rehydration');
+  let originalDidCreateRootView = appInstance.didCreateRootView;
 
-  // gather all input values just before the ember-cli-fastboot instance initializer will clear the DOM
-  service.inspect();
+  appInstance.didCreateRootView = function() {
+    // gather all input values just before the ember-cli-fastboot instance initializer will clear the DOM
+    service.inspect();
 
-  // reapply the values after Ember has rerendered
-  schedule('afterRender', service, 'rehydrate');
+    originalDidCreateRootView.apply(appInstance, arguments);
+
+    // reapply the values after Ember has rerendered
+    schedule('afterRender', service, 'rehydrate');
+  };
 }
 
 export default {
-  before: 'clear-double-boot', // run before DOM is erased by https://github.com/ember-fastboot/ember-cli-fastboot/blob/master/app/instance-initializers/clear-double-boot.js
+  // run after FastBoot initializer https://github.com/ember-fastboot/ember-cli-fastboot/blob/master/app/instance-initializers/clear-double-boot.js
+  // so it can "wins" patching didCreateRootView
+  after: 'clear-double-boot',
   initialize
 };
