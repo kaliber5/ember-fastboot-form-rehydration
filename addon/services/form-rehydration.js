@@ -9,6 +9,11 @@ function triggerBasicEvent(el, type) {
   el.dispatchEvent(event);
 }
 
+// https://html.spec.whatwg.org/multipage/input.html#concept-input-apply
+function supportsSelection(input) {
+  return /^(text|search|password|tel|url)$/.test(input.type);
+}
+
 export default Service.extend({
 
   selectors: ['input', 'textarea'],
@@ -24,7 +29,16 @@ export default Service.extend({
       .reduce((result, item) => assign(result, item), {})
     ;
     this.values = props;
-    this.activeElement = document.activeElement && document.activeElement.name;
+
+    if (document.activeElement) {
+      this.activeElementName = document.activeElement.name;
+
+      if (supportsSelection(document.activeElement)) {
+        this.selectionStart = document.activeElement.selectionStart;
+        this.selectionEnd = document.activeElement.selectionEnd;
+        this.selectionDirection = document.activeElement.selectionDirection;
+      }
+    }
   },
 
   rehydrate() {
@@ -39,8 +53,13 @@ export default Service.extend({
       }
     }
 
-    if (this.activeElement) {
-      document.querySelector(`[name="${this.activeElement}"]`).focus();
+    if (this.activeElementName) {
+      let activeElement = document.querySelector(`[name="${this.activeElementName}"]`);
+      activeElement.focus();
+
+      if (supportsSelection(activeElement)) {
+        activeElement.setSelectionRange(this.selectionStart, this.selectionEnd, this.selectionDirection);
+      }
     }
   }
 });
