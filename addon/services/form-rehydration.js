@@ -22,7 +22,7 @@ export default Service.extend({
     let rootElement = getOwner(this).rootElement || '';
     let elements = document.querySelectorAll(this.get('selectors').map((sel) => `${rootElement} ${sel}`).join(','));
     let props = Array.from(elements)
-      .filter((el) => !!el.name)
+      .filter((el) => !!el.name && el.value !== '')
       .map((el) => ({
         [el.name]: el.value
       }))

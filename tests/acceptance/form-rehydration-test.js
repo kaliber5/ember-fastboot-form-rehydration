@@ -31,6 +31,30 @@ test('it rehydrates form values', async function(assert) {
   await destroyApp(this.application);
 });
 
+test('it won\'t trigger input & change events for empty inputs', async function(assert) {
+  document.querySelector(rootSelector).innerHTML = staticFormMarkup;
+  let input = document.querySelector(`${rootSelector} input[name="title"]`)
+  let textarea = document.querySelector(`${rootSelector} textarea[name="text"]`);
+
+  input.value = 'foo';
+
+  this.application = startApp();
+
+  await visit('/');
+
+  input = document.querySelector(`${rootSelector} input[name="title"]`);
+  textarea = document.querySelector(`${rootSelector} textarea[name="text"]`);
+
+  // See test/dummy/controllers/application.js
+
+  assert.ok(input.classList.contains('event-input'), `Event 'input' was fired on the non-empty input element`);
+  assert.ok(input.classList.contains('event-change'), `Event 'change' was fired on the non-empty input element`);
+
+  assert.ok(!textarea.classList.contains('event-input'), `No 'input' event was fired on the empty textarea`);
+  assert.ok(!textarea.classList.contains('event-change'), `No 'change' event was fired on the empty textarea`);
+
+  await destroyApp(this.application);
+});
 
 test('it restores focus', async function(assert) {
   document.querySelector(rootSelector).innerHTML = staticFormMarkup;
