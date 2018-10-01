@@ -55,10 +55,12 @@ export default Service.extend({
 
     if (this.activeElementName) {
       let activeElement = document.querySelector(`[name="${this.activeElementName}"]`);
-      activeElement.focus();
+      if (activeElement) {
+        activeElement.focus();
 
-      if (supportsSelection(activeElement)) {
-        activeElement.setSelectionRange(this.selectionStart, this.selectionEnd, this.selectionDirection);
+        if (supportsSelection(activeElement)) {
+          activeElement.setSelectionRange(this.selectionStart, this.selectionEnd, this.selectionDirection);
+        }
       }
     }
   }
