@@ -101,6 +101,19 @@ test(`it doesn't throw for an input with no selection support`, async function(a
   await destroyApp(this.application);
 });
 
+test(`it doesn't throw when an input that was focused in the server-rendered output no longer exists`, async function(assert) {
+  assert.expect(0);
+
+  document.querySelector(rootSelector).innerHTML = staticFormMarkup;
+  document.querySelector(`${rootSelector} input[name="title"]`).focus();
+
+  this.application = startApp();
+  this.application.__container__.lookup('controller:application').set('shouldRenderForm', false);
+
+  await visit('/');
+  await destroyApp(this.application);
+});
+
 
 // All input selections could be restored in theory, but it adds very little value in practice...
 skip(`it restores selection for all input elements`, async function(assert) {
